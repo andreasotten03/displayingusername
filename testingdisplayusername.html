@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spotify Authorization</title>
+</head>
+<body>
+    <h1>Spotify Authorization</h1>
+    <p>Click the button below to authorize your Spotify account:</p>
+        <a href="https://accounts.spotify.com/authorize/?
+	client_id=d0108f1e76da4ac482d45085cf711551
+		&response_type=code&
+	redirect_uri=https://andreasotten03.github.io/displayingusername/testingdisplayusername.html
+		&scope=user-library-read" class="login-button">Login</a>
+    <div id="user-info"></div>
+
+   <script>
+    function getUserInfo(accessToken) {
+        fetch('https://api.spotify.com/v1/me', {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('user-info').innerHTML = `Logged in as: ${data.display_name}`;
+        })
+        .catch(error => console.error(error));
+    }
+
+    // Parse the access token from the URL after Spotify authorization
+    const params = new URLSearchParams(window.location.hash.substring(1));
+    const accessToken = params.get('access_token');
+
+    if (accessToken) {
+        getUserInfo(accessToken);
+    }
+</script>
+</body>
+</html>
